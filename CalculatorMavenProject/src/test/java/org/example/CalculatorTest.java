@@ -23,7 +23,14 @@ class CalculatorTest
     void integerSubtraction()
     {
         Calculator calculator = new Calculator();
-        int result = calculator.integerSubtraction( 33, 1 );
-        assertEquals( 32, result );
+        int minuend = 33;
+        int subtrahend = 1;
+        int expectedResult = 32;
+
+        int result = calculator.integerSubtraction( minuend, subtrahend );
+
+        assertEquals( expectedResult, result,
+            () -> minuend + "-" + subtrahend + " did not produce " + expectedResult
+        );
     }
 }

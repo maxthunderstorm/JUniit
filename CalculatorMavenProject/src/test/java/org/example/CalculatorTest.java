@@ -59,6 +59,7 @@ class CalculatorTest
 
     @DisplayName( "Division by zero" )
     @Test
+    @Disabled( "TODO: still need to work on it " )
     void testIntegerDivision_WhenDividendIsDividedByZero_ShouldThrowArithmeticException()
     {
         fail( "Not implemented yet" );

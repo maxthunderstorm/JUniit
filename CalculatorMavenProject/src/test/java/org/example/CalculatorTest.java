@@ -83,6 +83,7 @@ class CalculatorTest
     }
 
     @ParameterizedTest
+    //works only with one parameter
     @ValueSource(strings = {"John", "Kate", "Alice"})
     void valueSourceDemonstration(String firstName) {
         System.out.println(firstName);

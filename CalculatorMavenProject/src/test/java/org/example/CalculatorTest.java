@@ -1,6 +1,11 @@
 package org.example;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,18 +84,24 @@ class CalculatorTest
                 "Unexpected exception message");
     }
 
-    @DisplayName( "Test 33-1=32" )
-    @Test
-    void integerSubtraction()
+    @DisplayName( "Test integer subtraction [minuend, subtrahend, expectedResult]" )
+    @ParameterizedTest
+    //@MethodSource("integerSubtractionParameters") "" are needed if the name differ
+    @MethodSource()
+    void integerSubtraction(int minuend, int subtrahend, int expectedResult)
     {
-        int minuend = 33;
-        int subtrahend = 1;
-        int expectedResult = 32;
-
         int result = calculator.integerSubtraction( minuend, subtrahend );
 
         assertEquals( expectedResult, result,
             () -> minuend + "-" + subtrahend + " did not produce " + expectedResult
+        );
+    }
+
+    private static Stream<Arguments> integerSubtraction() {
+        return Stream.of(
+                Arguments.of(33, 1, 32),
+                Arguments.of(54, 1, 53),
+                Arguments.of(24, 1, 23)
         );
     }
 }

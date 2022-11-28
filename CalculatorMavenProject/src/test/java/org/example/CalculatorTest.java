@@ -2,11 +2,7 @@ package org.example;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,16 +85,17 @@ class CalculatorTest
     @ParameterizedTest
     //@MethodSource("integerSubtractionParameters") "" are needed if the name differ
     //@MethodSource()
-    @CsvSource( {
-            "33, 1, 32",
-            "24, 1, 23",
-            "54, 1, 53",
-    } )
+//    @CsvSource( {
+//            "33, 1, 32",
+//            "24, 1, 23",
+//            "54, 1, 53",
+//    } )
 //    @CsvSource({
 //            "apple, orange",
 //            "apple, ''",
 //            "apple,", //second param is null
 //    } )
+    @CsvFileSource(resources = "/integerSubtraction.csv")
     void integerSubtraction(int minuend, int subtrahend, int expectedResult)
     {
         int result = calculator.integerSubtraction( minuend, subtrahend );

@@ -1,11 +1,5 @@
 package org.example;
 
-
-/**
- * Please add your description here.
- *
- * @author Pulse Innovations Ltd
- */
 public class Calculator
 {
     public int integerDivision( int dividend, int divisor )

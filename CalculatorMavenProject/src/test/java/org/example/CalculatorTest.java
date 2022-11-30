@@ -7,11 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Please add your description here.
- *
- * @author Pulse Innovations Ltd
- */
+
 
 @DisplayName( "Test math operations in Calculator class" )
 class CalculatorTest

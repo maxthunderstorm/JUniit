@@ -17,7 +17,7 @@ public class DemoRepeatedTest {
 
     @DisplayName( "Division by zero" )
    // @RepeatedTest(3)
-            @RepeatedTest(value = 3, name = "{displayName}. Repition {currentRepetition} of" +
+            @RepeatedTest(value = 3, name = "{displayName}. Repetition {currentRepetition} of" +
                     " {totalRepetitions}")
         //@Disabled( "TODO: still need to work on it " )
     void testIntegerDivision_WhenDividendIsDividedByZero_ShouldThrowArithmeticException(

@@ -29,7 +29,7 @@ public class UserServiceTest
     private UserRepository userRepository;
 
     @Mock
-    private EmailVerificationService emailVerificationService;
+    private EmailVerificationServiceImpl emailVerificationService;
 
     private String firstName;
     private String lastName;
@@ -115,6 +115,8 @@ public class UserServiceTest
         //when
         doCallRealMethod().when(emailVerificationService)
                 .scheduleEmailConfirmation(any(User.class));
+
+        User user = userService.createUser(firstName, lastName, email, password, repeatPassword);
 
         //then
         verify(emailVerificationService, times(1))

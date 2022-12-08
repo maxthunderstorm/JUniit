@@ -2,9 +2,7 @@ package com.example;
 
 import com.example.data.UserRepository;
 import com.example.model.User;
-import com.example.service.UserService;
-import com.example.service.UserServiceException;
-import com.example.service.UserServiceImpl;
+import com.example.service.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,21 +17,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class )
 public class UserServiceTest
 {
 
     @InjectMocks
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
     @Mock
-    UserRepository userRepository;
-    String firstName;
-    String lastName;
-    String email;
-    String password;
-    String repeatPassword;
+    private UserRepository userRepository;
+
+    @Mock
+    private EmailVerificationService emailVerificationService;
+
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private String repeatPassword;
 
 
     @BeforeEach
@@ -81,6 +83,26 @@ public class UserServiceTest
 
 
         //then
+    }
+
+    @Test
+    @DisplayName("EmailNotificationException is handled")
+    void testCreateUser_whenEmailNotificationExceptionThrown_throwsUserServiceException() {
+        //given
+
+        //when
+        when(userRepository.save(any(User.class))).thenReturn(true);
+        doThrow(EmailNotificationServiceException.class)
+                .when(emailVerificationService)
+                .scheduleEmailConfirmation(any(User.class));
+
+        //then
+        assertThrows( EmailNotificationServiceException.class, () -> {
+            userService.createUser( firstName, lastName, email, password, repeatPassword );
+        }, "Should have thrown UserServiceException instead" );
+
+        verify(emailVerificationService, times(1))
+                .scheduleEmailConfirmation(any(User.class));
     }
 
 }

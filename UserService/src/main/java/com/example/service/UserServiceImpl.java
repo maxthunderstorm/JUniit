@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService
         }
         catch ( RuntimeException ex )
         {
-            throw new UserServiceException( ex.getMessage() );
+            throw new EmailNotificationServiceException( ex.getMessage() );
         }
 
         return user;

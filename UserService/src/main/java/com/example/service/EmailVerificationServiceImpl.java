@@ -12,6 +12,6 @@ public class EmailVerificationServiceImpl implements EmailVerificationService
     @Override
     public void scheduleEmailConfirmation( final User user )
     {
-
+        System.out.println("scheduleEmailConfirmation is called");
     }
 }

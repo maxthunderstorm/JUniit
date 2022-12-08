@@ -97,10 +97,26 @@ public class UserServiceTest
                 .scheduleEmailConfirmation(any(User.class));
 
         //then
-        assertThrows( EmailNotificationServiceException.class, () -> {
-            userService.createUser( firstName, lastName, email, password, repeatPassword );
-        }, "Should have thrown UserServiceException instead" );
+        assertThrows( EmailNotificationServiceException.class, () ->
+                userService.createUser( firstName, lastName, email, password, repeatPassword ),
+                "Should have thrown UserServiceException instead" );
 
+//        doNothing().when(emailVerificationService).scheduleEmailConfirmation(any(User.class));
+
+        verify(emailVerificationService, times(1))
+                .scheduleEmailConfirmation(any(User.class));
+    }
+
+    @Test
+    void testCreateUser_whenCreated_schedulesEmailConfirmation() {
+        //given
+        when(userRepository.save(any(User.class))).thenReturn(true);
+
+        //when
+        doCallRealMethod().when(emailVerificationService)
+                .scheduleEmailConfirmation(any(User.class));
+
+        //then
         verify(emailVerificationService, times(1))
                 .scheduleEmailConfirmation(any(User.class));
     }

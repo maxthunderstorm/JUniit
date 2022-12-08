@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService
 
         return user;
     }
+
+    void test()
+    {
+        System.out.println();
+    }
 }

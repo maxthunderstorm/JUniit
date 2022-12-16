@@ -48,7 +48,15 @@ public class UsersControllerWebLayerTest {
     @MockBean //Might need qualify annotation if there is more than one implementation
     UsersService usersService;
 
-
+    private UserDetailsRequestModel userDetailsRequestModel;
+    @BeforeEach
+    void setUp() {
+        userDetailsRequestModel = new UserDetailsRequestModel();
+        userDetailsRequestModel.setFirstName("test");
+        userDetailsRequestModel.setLastName("test123");
+        userDetailsRequestModel.setEmail("test@mail.com");
+        userDetailsRequestModel.setPassword("12345678");
+    }
     @Test
     @DisplayName("User can be created")
     void testCreateUser_whenValidUserDetailsProvided_returnsCreatedUserDetails() throws Exception {
@@ -91,11 +99,7 @@ public class UsersControllerWebLayerTest {
     @DisplayName("First name is not empty")
     void testCreateUser_whenFirstNameIsNotProvided_returns400StatusCode() throws Exception {
         //given
-        UserDetailsRequestModel userDetailsRequestModel = new UserDetailsRequestModel();
         userDetailsRequestModel.setFirstName("");
-        userDetailsRequestModel.setLastName("test123");
-        userDetailsRequestModel.setEmail("test@mail.com");
-        userDetailsRequestModel.setPassword("12345678");
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,5 +112,27 @@ public class UsersControllerWebLayerTest {
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus(), "Incorrect HTTP status code returned");
+    }
+
+    @Test
+    @DisplayName("Firstname can not be smaller than 2 characters")
+    void testCreateUser_whenFirstNameIsOnlyOneCharacter_return400StatusCode() throws Exception {
+
+        //given
+        userDetailsRequestModel.setFirstName("a");
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userDetailsRequestModel));
+
+        //when
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+
+        //then
+        assertEquals(HttpStatus.BAD_REQUEST.value(),
+                mvcResult.getResponse().getStatus(), "Http Status code isn't 400");
+
+
     }
 }

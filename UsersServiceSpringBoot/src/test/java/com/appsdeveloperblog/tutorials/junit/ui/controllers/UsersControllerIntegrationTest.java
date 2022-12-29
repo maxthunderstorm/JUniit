@@ -76,8 +76,8 @@ public class UsersControllerIntegrationTest {
         userDetailsRequestJson.put("firstName", "TestFirstName");
         userDetailsRequestJson.put("lastName", "TestLastName");
         userDetailsRequestJson.put("email", "test@gmail.com");
-        userDetailsRequestJson.put("password", "12345");
-        userDetailsRequestJson.put("repeatPassword", "12345");
+        userDetailsRequestJson.put("password", "12345678");
+        userDetailsRequestJson.put("repeatPassword", "12345678");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

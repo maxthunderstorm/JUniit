@@ -3,6 +3,7 @@ package com.appsdeveloperblog.tutorials.junit.ui.controllers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
 // Without any specific WebEnvironment the default is WebEnvironment.MOCK
@@ -23,19 +24,31 @@ import org.springframework.test.context.TestPropertySource;
 // @TestPropertySource annotation. But it applies the following priority:
 // application.properties < application-test.properties  < properties=...
 
+//To avoid port number conflicts use WebEnvironment.RANDOM_PORT.
+//The injected serverPort will be the property server.property
+//defined in application.properties and this will be set to 0 (why?).
+// To see the actually port
+// you have to use the @LocalServerPort annotation!
+
 /*@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
 properties = {"server.port=8081", "hostname=192.168.0.2"})*/
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(locations = "/application-test.properties",
-properties = "server.port=8081")
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+//@TestPropertySource(locations = "/application-test.properties",
+//properties = "server.port=8081")
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UsersControllerIntegrationTest {
 
     //inject property server.port
     @Value("${server.port}")
     private int serverPort;
 
+    @LocalServerPort
+    private int localServerPort;
+
     @Test
     void contextLoads() {
         System.out.println("server.port=" + serverPort);
+        System.out.println("local server port =" + localServerPort);
     }
 }

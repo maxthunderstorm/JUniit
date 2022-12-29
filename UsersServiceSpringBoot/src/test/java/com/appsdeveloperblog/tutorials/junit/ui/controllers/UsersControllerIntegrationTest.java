@@ -1,10 +1,22 @@
 package com.appsdeveloperblog.tutorials.junit.ui.controllers;
 
+import com.appsdeveloperblog.tutorials.junit.ui.response.UserRest;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.http.*;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 // Without any specific WebEnvironment the default is WebEnvironment.MOCK
 // with this Spring App Context will only create
@@ -46,9 +58,60 @@ public class UsersControllerIntegrationTest {
     @LocalServerPort
     private int localServerPort;
 
+    //Easier to use for user authentication in contrast to RestTemplate
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+
+//    @Test
+//    void contextLoads() {
+//        System.out.println("server.port=" + serverPort);
+//        System.out.println("local server port =" + localServerPort);
+//    }
+
     @Test
-    void contextLoads() {
-        System.out.println("server.port=" + serverPort);
-        System.out.println("local server port =" + localServerPort);
+    @DisplayName("User can be created")
+    void testCreateUser_whenValidDetailsIsProvided_returnsUserDetails() throws JSONException {
+        //given
+        JSONObject userDetailsRequestJson = new JSONObject();
+        userDetailsRequestJson.put("firstName", "TestFirstName");
+        userDetailsRequestJson.put("lastName", "TestLastName");
+        userDetailsRequestJson.put("email", "test@gmail.com");
+        userDetailsRequestJson.put("password", "12345");
+        userDetailsRequestJson.put("repeatPassword", "12345");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<String> request = new HttpEntity<>(userDetailsRequestJson.toString(), headers);
+
+
+        //when
+        ResponseEntity<UserRest> createdUserDetailsEntity = testRestTemplate.postForEntity("/users", request,
+                UserRest.class);
+
+        UserRest createdUserDetails = createdUserDetailsEntity.getBody();
+
+        //then
+        assertEquals(HttpStatus.OK, createdUserDetailsEntity.getStatusCode());
+        assertEquals(userDetailsRequestJson.getString("firstName"),
+                createdUserDetails.getFirstName(),
+                "Returned user's first name seems to be incorrect!"
+        );
+        assertEquals(userDetailsRequestJson.getString("lastName"),
+                createdUserDetails.getLastName(),
+                "Returned user's last name seems to be incorrect!"
+        );
+        assertEquals(userDetailsRequestJson.getString("email"),
+                createdUserDetails.getEmail(),
+                "Returned user's email seems to be incorrect!"
+        );
+        assertEquals(userDetailsRequestJson.getString("email"),
+                createdUserDetails.getEmail(),
+                "Returned user's email seems to be incorrect!"
+        );
+        assertFalse(createdUserDetails.getUserId().trim().isEmpty(),
+                "User id should not be empty!");
+
     }
 }

@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -113,5 +115,29 @@ public class UsersControllerIntegrationTest {
         assertFalse(createdUserDetails.getUserId().trim().isEmpty(),
                 "User id should not be empty!");
 
+    }
+
+    @Test
+    @DisplayName("GET /users requires JWT")
+    void testGetUsers_whenMissingJWT_returns403() {
+        //given
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", "application/json");
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+
+
+        //when
+        //exchange used to send a get request and get back a list of objects
+        //TODO: why exchange method???
+        ResponseEntity<List<UserRest>> response = testRestTemplate.exchange("/users",
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<List<UserRest>>() {
+                });
+
+        //then
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode(), "HTTP Status code 403" +
+                "should have been returned!");
     }
 }

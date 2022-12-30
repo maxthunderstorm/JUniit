@@ -4,8 +4,7 @@ import com.appsdeveloperblog.tutorials.junit.security.SecurityConstants;
 import com.appsdeveloperblog.tutorials.junit.ui.response.UserRest;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,6 +50,7 @@ properties = {"server.port=8081", "hostname=192.168.0.2"})*/
 //properties = "server.port=8081")
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UsersControllerIntegrationTest {
 
     //inject property server.port
@@ -72,6 +72,7 @@ public class UsersControllerIntegrationTest {
 
     @Test
     @DisplayName("User can be created")
+    @Order(1)
     void testCreateUser_whenValidDetailsIsProvided_returnsUserDetails() throws JSONException {
         //given
         JSONObject userDetailsRequestJson = new JSONObject();
@@ -119,6 +120,7 @@ public class UsersControllerIntegrationTest {
 
     @Test
     @DisplayName("GET /users requires JWT")
+    @Order(2)
     void testGetUsers_whenMissingJWT_returns403() {
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -143,10 +145,11 @@ public class UsersControllerIntegrationTest {
 
     @Test
     @DisplayName("/login works")
+    @Order(3)
     void testUserLogin_whenValidCredentialsProvided_returnsJWTinAuthorizationHeader() throws JSONException {
         //given
         JSONObject loginCredentials = new JSONObject();
-        loginCredentials.put("email", "test3@test.com");
+        loginCredentials.put("email", "test@gmail.com");
         loginCredentials.put("password", "12345678");
 
         HttpEntity<String> request = new HttpEntity<>(loginCredentials.toString());

@@ -51,6 +51,11 @@ properties = {"server.port=8081", "hostname=192.168.0.2"})*/
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+// Since there is by default a test class per method
+// this would mean that authorizationToken is null in
+// testGetUsers_whenValidJWTProvided_returnsUsers.
+// So we have to change this behavior to TestInstance per Class!
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UsersControllerIntegrationTest {
 
     //inject property server.port
@@ -63,6 +68,8 @@ public class UsersControllerIntegrationTest {
     //Easier to use for user authentication in contrast to RestTemplate
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    private String authorizationToken;
 
 //    @Test
 //    void contextLoads() {
@@ -157,11 +164,35 @@ public class UsersControllerIntegrationTest {
         //when
         ResponseEntity<Object> response = testRestTemplate.postForEntity("/users/login", request, null);
 
+        authorizationToken = response.getHeaders().getValuesAsList(SecurityConstants.HEADER_STRING).get(0);
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode(), "http status code should be 200");
-        assertNotNull(response.getHeaders().getValuesAsList(SecurityConstants.HEADER_STRING).get(0),
+        assertNotNull(authorizationToken,
                 "Response should contain Authorization header with JWT");
         assertNotNull(response.getHeaders().getValuesAsList("UserID").get(0),
                 "Response should contain user id in a response header");
+    }
+
+    @Test
+    @DisplayName("GET /users works")
+    @Order(4)
+    void testGetUsers_whenValidJWTProvided_returnsUsers() {
+        //given
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(authorizationToken);
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+
+        //when
+        ResponseEntity<List<UserRest>> response = testRestTemplate.exchange("/users",
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<List<UserRest>>() {
+                });
+
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "HTTP Status code should be 200");
+        assertTrue(response.getBody().size() == 1, "There should be exactly one user in the list");
     }
 }

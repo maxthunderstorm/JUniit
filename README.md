@@ -1,6 +1,6 @@
 # Testing Java with JUnit 5 & Mockito 
 
-This is a personal summary of notes on the Udemy course "Testing Java with JUnit 5 & Mockito" by Sergey Kargopolov.
+These are personal notes on the Udemy course "Testing Java with JUnit 5 & Mockito" by Sergey Kargopolov.
 
 ## Section 1: Introduction
 

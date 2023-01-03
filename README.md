@@ -58,3 +58,43 @@ In order to be able to run the unit tests in the Maven build lifecycle, we need 
     </plugins>
 </build>
 ```
+
+## Section 5: Basics of JUnit 5
+
+You can use messages in an assertion, which are called when the test fails. 
+You can also do this lazy by using a lambda expression:
+```
+assertEquals( expectedResult, result,
+            () -> minuend + "-" + subtrahend + " did not produce " + expectedResult
+        );
+```
+
+Good about this section is that the structure of a unit test is explained. 
+The scheme arrange/act/assert is used here. However, I prefer to use given/when/then
+like Martin Fowler.
+
+### JUnit Test Lifecycle
+
+By default, an instance of the test class is created for each test method when running JUnit tests.
+The order in which a test is carried out is "random".
+There are a few lifecycle annotations:
+* @BeforeAll (Annotated method is called before any test method is called. For example to create a DB.)
+* @AfterAll (Clean Up Method. E. g. to delete DB)
+* @BeforeEach (Executed before each test method)
+* @AfterEach (Clean Up Method)
+
+![img_2.png](img_2.png)
+
+If you want to test for exceptions, you can use assertThrows:
+
+```
+ArithmeticException actualException = assertThrows(ArithmeticException.class, () ->
+        {
+            // When
+            calculator.integerDivision(dividend, divsior);
+        }, "Division by zero should throw an ArithmeticException");
+
+        // Then
+        assertEquals(expectedExceptionMessage, actualException.getMessage(),
+                "Unexpected exception message");
+```

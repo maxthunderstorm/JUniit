@@ -31,7 +31,30 @@ JUnit5 = JUnit Platform + JUnit Jupiter + JUnit Vintage
 * JUnit Jupiter: A combination of new programming model + extension model for writing tests and extensions in JUnit5 (annotations/assertions, extension api allows us to create our own version of test api)
 * JUnit Vintage: Test engine for older versions of JUnit.
 
+## Section 2: Add JUnit5 to Maven project
 
+The course explains what to do if you want to use JUnit5 in a project with Maven.
+For this purpose, a Maven project *CalculatorMavenProject* is created.
+JUnit Jupiter (aggregator) is required in the pom.xml:
 
+```
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.9.1</version>
+    <scope>test</scope>
+</dependency>
+```
 
-
+In order to be able to run the unit tests in the Maven build lifecycle, we need to add the Surefire plugin:
+```
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M7</version>
+        </plugin>
+    </plugins>
+</build>
+```

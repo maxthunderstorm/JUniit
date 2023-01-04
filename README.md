@@ -157,5 +157,45 @@ Instead of another method, you can also use the annotation @CsvSource as follows
 Or the *@CsvFileSource(resources = "/integerSubtraction.csv")* annotation if you
 want to use a csv file (here integerSubtraction.csv) with test values.
 
+### Method Order
 
+To run methods (to be sure) in random order use
+the *@TestMethodOrder( MethodOrderer.Random.class )*
+annotation at class level:
+
+```
+@TestMethodOrder( MethodOrderer.Random.class )
+public class MethodOrderedRandomlyTest
+{
+...
+}
+```
+
+To run methods by name use *@TestMethodOrder( MethodOrderer.MethodName.class )* instead.
+
+If you want to run methods by order index
+use *@TestMethodOrder( MethodOrderer.OrderAnnotation.class )*
+at class level and *@Order(INDEX)* at method level.
+Example:
+```
+@TestMethodOrder( MethodOrderer.OrderAnnotation.class )
+public class MethodOrderedByOrderIndexTest {
+
+    @Order( 1 )
+    @Test
+    void testD()
+    {
+        System.out.println( "Running Test D" );
+        stringBuilder.append( "1" );
+    }
+    
+    @Order( 2 )
+    @Test
+    void testA()
+    {
+        System.out.println( "Running Test A" );
+        stringBuilder.append( "2" );
+    }
+}
+```
 

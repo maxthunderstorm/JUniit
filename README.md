@@ -199,3 +199,12 @@ public class MethodOrderedByOrderIndexTest {
 }
 ```
 
+### Changing Lifecycle 
+Normally, a new test instance of the test class is created for each test method. 
+If you want to change this, for example because you do not want to reinitialise the attributes of the 
+class for integration tests, you can use the annotation *@TestInstance( TestInstance.Lifecycle.PER_CLASS )*.
+
+An example for this can be seen in the class
+MethodOrderedByOrderIndexTest in the CalculatorMavenProject.
+
+![img_3.png](img_3.png)

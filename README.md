@@ -98,3 +98,39 @@ ArithmeticException actualException = assertThrows(ArithmeticException.class, ()
         assertEquals(expectedExceptionMessage, actualException.getMessage(),
                 "Unexpected exception message");
 ```
+
+## Section 6: Advanced JUnit 5
+
+### Parameterized Tests
+Parameterised tests are tests that accept input parameters. 
+Thus, one and the same test can be tested for different values.
+To obtain a parameterised test, use the annotation
+*@ParameterizedTest* instead of *@Test*.
+
+There are several ways to get the input parameters. One is to write a separate method that returns a stream<Arguments>.
+If the name of the test method is identical to the method that returns the parameters, there is nothing else to do.  
+
+Otherwise you have to use the annotation *@MethodSource("INPUT_METHOD_NAME")*.  
+Example:
+```
+    @DisplayName( "Test integer subtraction [minuend, subtrahend, expectedResult]" )
+    @ParameterizedTest
+    //Only needed because the input-method name is not integerSubtraction
+    @MethodSource("integerSubtractionParameters")
+    void integerSubtraction(int minuend, int subtrahend, int expectedResult)
+    {
+        int result = calculator.integerSubtraction( minuend, subtrahend );
+
+        assertEquals( expectedResult, result,
+            () -> minuend + "-" + subtrahend + " did not produce " + expectedResult
+        );
+    }
+
+    private static Stream<Arguments> integerSubtraction() {
+        return Stream.of(
+                Arguments.of(33, 1, 32),
+                Arguments.of(54, 1, 53),
+                Arguments.of(24, 1, 23)
+        );
+    }
+```

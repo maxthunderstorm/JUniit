@@ -134,3 +134,28 @@ Example:
         );
     }
 ```
+
+Instead of another method, you can also use the annotation @CsvSource as follows:
+```
+    @DisplayName( "Test integer subtraction [minuend, subtrahend, expectedResult]" )
+    @ParameterizedTest
+    @CsvSource( {
+            "33, 1, 32",
+            "24, 1, 23",
+            "54, 1, 53",
+    } )
+    void integerSubtraction(int minuend, int subtrahend, int expectedResult)
+    {
+        int result = calculator.integerSubtraction( minuend, subtrahend );
+
+        assertEquals( expectedResult, result,
+            () -> minuend + "-" + subtrahend + " did not produce " + expectedResult
+        );
+    }
+```
+
+Or the *@CsvFileSource(resources = "/integerSubtraction.csv")* annotation if you
+want to use a csv file (here integerSubtraction.csv) with test values.
+
+
+

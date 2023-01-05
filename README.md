@@ -216,3 +216,109 @@ The steps in TDD are:
 * Green (Write Application Code to make Test code pass)
 * Refactor (Clean up. Improve Unit Test and Application Code)
 * Repeat (Repeat the above steps)
+
+## Section 8: Mockito
+
+Mockito is an open source testing framework
+for Java. This makes it possible to write unit tests with dependencies.
+For this it allows us to create "test doubles"
+in unit tests.
+
+What is a test double?
+* Mock
+* Fake
+* Spy
+* Stub
+
+
+To use Mockito you have to add the following
+dependency:
+```
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-junit-jupiter</artifactId>
+    <version>4.9.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+It is explained that you can only use Mockito through *Dependency Injection*.
+More precisely, constructor dependency is used for this.
+
+Example:
+```
+public class UserServiceImpl implements UserService
+{
+
+    private UserRepository userRepository;
+
+    public UserServiceImpl( UserRepository userRepository )
+    {
+        this.userRepository = userRepository;
+    }
+....
+}
+```
+Here userRepository is a dependency of UserServiceImpl.
+
+
+To use Mockito you have to use the annotation *@ExtendWith( MockitoExtension.class )*
+at class level and the annotation *@Mock* for
+the dependency you want to mock. Furthermore
+you have to use the annotation *@InjectMocks*
+for the instance that dependents on the mocked
+dependency.
+
+
+Example:
+
+```
+@ExtendWith( MockitoExtension.class )
+public class UserServiceTest
+{
+
+    @InjectMocks
+    private UserServiceImpl userService;
+    @Mock
+    private UserRepository userRepository;
+...
+}
+```
+
+If now you want to stub a method, this is how to do it:
+```
+when( userRepository.save( any(User.class) ) ).thenReturn( true );
+```
+This describes the behaviour of the mocked
+userRepository for the method *save* with
+any instance of the User class.
+
+To test whether or how often a method has been called, one uses verify.  
+Example:
+```
+Mockito.verify( userRepository, Mockito.times( 1 ) ).save( Mockito.any(User.class) );
+```
+
+To stub an exception you can use thenThrow.  
+Example:
+```
+when( userRepository.save( any(User.class) ) ).thenThrow( RuntimeException.class );
+```
+
+However, this does not work if the method returns void!
+This is possible with *doThrow*.  
+Example:
+```
+doThrow(EmailNotificationServiceException.class)
+                .when(emailVerificationService)
+                .scheduleEmailConfirmation(any(User.class));
+```
+
+You can also let the methods of mock objects do nothing or call the real method.
+
+Example:
+```
+doNothing().when(emailVerificationService).scheduleEmailConfirmation(any(User.class));
+doCallRealMethod().when(emailVerificationService)
+                .scheduleEmailConfirmation(any(User.class));
+```

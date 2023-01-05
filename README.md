@@ -208,3 +208,11 @@ An example for this can be seen in the class
 MethodOrderedByOrderIndexTest in the CalculatorMavenProject.
 
 ![img_3.png](img_3.png)
+
+## Section 7: TDD
+
+The steps in TDD are:
+* Red (Write Unit Test thats fails)
+* Green (Write Application Code to make Test code pass)
+* Refactor (Clean up. Improve Unit Test and Application Code)
+* Repeat (Repeat the above steps)

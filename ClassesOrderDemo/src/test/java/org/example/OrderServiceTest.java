@@ -3,7 +3,7 @@ package org.example;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.Test;
 @Order( 3 )
 public class OrderServiceTest
 {
@@ -14,6 +14,6 @@ public class OrderServiceTest
     }
 
     @Test
-    void testCreateOrder_whenProductIdIsMissing_throwsOrdersServiceException() {
+    void testCreateOrder_whenProductIdIsMissingthrows_OrdersServiceException() {
     }
 }

@@ -15,5 +15,6 @@ public class OrderServiceTest
 
     @Test
     void testCreateOrder_whenProductIdIsMissingthrows_OrdersServiceException() {
+        int c=10/9;
     }
 }
